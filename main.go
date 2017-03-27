@@ -8,9 +8,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func handlerFunc() {
+// func handlerFunc() {
 
-}
+// }
 
 //pcPushMessage 推送的数据结构
 type pcPushMessage struct {
