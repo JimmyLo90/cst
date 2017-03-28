@@ -1,22 +1,22 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
-	"log"
-
 	"github.com/gorilla/websocket"
+	"github.com/zhyq132/cst/business"
 )
 
-// func handlerFunc() {
-
-// }
+//ConfigPath 配置路径，全局变量
+var ConfigPath string
 
 //pcPushMessage 推送的数据结构
 type pcPushMessage struct {
 	MsgCmd  string `json:"cmd"`
 	MsgData struct {
-		MsgAreaId string `json:"area_id"`
+		MsgAreaId int    `json:"area_id"`
 		MsgType   string `json:"type"`
 	} `json:"data"`
 }
@@ -61,21 +61,21 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 		//接受ws传来的数据，不符合结构的，删除客户端,并关闭链接
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			delete(clients, ws)
-			ws.Close()
+			fmt.Println("********************数据错误,不会接入推送服务\n\n\n\n ")
 		} else {
 			if msg.MsgCmd == "sign" {
 				clients[ws] = msg
+				fmt.Println("*******************身份标识确认,已接入推送服务\n\n\n\n ")
 			} else if msg.MsgCmd == "push" {
 				var responseMsg businessResponseMessage
 				//查找当前area_id对应的业务信息
 				responseMsg.Status = 200
 				responseMsg.Message = "ok"
-				responseMsg.Data.BusinessDrive = 0
-				responseMsg.Data.BusinessEme = 0
-				responseMsg.Data.BusinessIns = 0
-				responseMsg.Data.BusinessMain = 0
-				responseMsg.Data.BusinessPur = 0
+				responseMsg.Data.BusinessDrive = business.SellPromiseCount(msg.MsgData.MsgAreaId)
+				responseMsg.Data.BusinessEme = business.SupportCount(msg.MsgData.MsgAreaId)
+				responseMsg.Data.BusinessIns = business.XubaoCount(msg.MsgData.MsgAreaId)
+				responseMsg.Data.BusinessMain = business.YangxiuCount(msg.MsgData.MsgAreaId)
+				responseMsg.Data.BusinessPur = business.SellAskCount(msg.MsgData.MsgAreaId)
 
 				for key, val := range clients {
 					if val.MsgData.MsgAreaId == msg.MsgData.MsgAreaId && val.MsgData.MsgType == msg.MsgData.MsgType {
@@ -83,7 +83,6 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 					}
 				}
 			}
-
 		}
 	}
 }
@@ -92,7 +91,7 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 func main() {
 	http.HandleFunc("/", handlerWs)
 
-	if err := http.ListenAndServe("127.0.0.1:8000", nil); err != nil {
+	if err := http.ListenAndServe("127.0.0.1:8888", nil); err != nil {
 		panic("error" + err.Error())
 	}
 }

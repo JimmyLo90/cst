@@ -1,13 +1,13 @@
-db
- address:127.0.0.1
- port:3306
- dbname:4s_wx_db
- username:root
- password:rootpassword
+db:
+   address :  192.168.2.240
+   port :  5306
+   dbname : 4s_wx_db
+   username : root
+   password : allen123hjmHJM
 
-wdb
- address:127.0.0.1
- port:3306
- dbname:w_center
- username:root
- password:rootpassword
+wdb:
+   address : 192.168.2.240
+   port : 5306
+   dbname : w_center
+   username : root
+   password : allen123hjmHJM
