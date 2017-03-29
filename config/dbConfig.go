@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 //DBConfigPath 配置文件路径
@@ -45,7 +45,7 @@ func GetDbDSN() string {
 
 	db := dbConf.Db
 
-	// example   id:password@tcp(your-amazonaws-uri.com:3306)/dbname
+	// example   id:password@tcp(your-uri.com:3306)/dbname
 	s = db.Username + ":" + db.Password + "@tcp(" + db.Address + ":" + db.Port + ")/" + db.Dbname
 
 	return s
