@@ -62,7 +62,12 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 		//接受ws传来的数据，不符合结构的，删除客户端,并关闭链接
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			fmt.Println("********************数据错误,不会接入推送服务\n\n\n\n ")
+			isWsClose := websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseNoStatusReceived)
+			if isWsClose {
+				delete(clients, ws)
+				fmt.Println("*******************链接关闭,推送服务已停止\n\n\n\n ")
+				break
+			}
 		} else {
 			if msg.MsgCmd == "sign" {
 				clients[ws] = msg
@@ -81,6 +86,7 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 				for key, val := range clients {
 					if val.MsgData.MsgAreaId == msg.MsgData.MsgAreaId && val.MsgData.MsgType == msg.MsgData.MsgType {
 						key.WriteJSON(responseMsg)
+						fmt.Println("*******************数据获取完毕确认,已推送\n\n\n\n ")
 					}
 				}
 			}
