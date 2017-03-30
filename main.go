@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -49,7 +48,7 @@ var upgrade = websocket.Upgrader{
 func handlerWs(res http.ResponseWriter, req *http.Request) {
 	ws, err := upgrade.Upgrade(res, req, nil)
 	if err != nil {
-		log.Fatal("upgrade http request to ws err:", err)
+		fmt.Println("upgrade http request to ws err:", err)
 	}
 	defer func() {
 		delete(clients, ws)
