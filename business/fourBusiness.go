@@ -2,6 +2,7 @@ package business
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/zhyq132/cst/config"
@@ -14,6 +15,7 @@ func SellAskCount(areaId int) int {
 
 	dbConn, err := sql.Open("mysql", dbDsn)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 	defer dbConn.Close()
@@ -22,6 +24,7 @@ func SellAskCount(areaId int) int {
 
 	err = dbConn.QueryRow(sql, areaId).Scan(&i)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 
@@ -35,6 +38,7 @@ func SellPromiseCount(areaId int) int {
 
 	dbConn, err := sql.Open("mysql", dbDsn)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 	defer dbConn.Close()
@@ -43,6 +47,7 @@ func SellPromiseCount(areaId int) int {
 
 	err = dbConn.QueryRow(sql, areaId).Scan(&i)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 
@@ -56,6 +61,7 @@ func YangxiuCount(areaId int) int {
 
 	dbConn, err := sql.Open("mysql", dbDsn)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 	defer dbConn.Close()
@@ -64,6 +70,7 @@ func YangxiuCount(areaId int) int {
 
 	err = dbConn.QueryRow(sql, areaId).Scan(&i)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 
@@ -77,6 +84,7 @@ func XubaoCount(areaId int) int {
 
 	dbConn, err := sql.Open("mysql", dbDsn)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 	defer dbConn.Close()
@@ -85,6 +93,7 @@ func XubaoCount(areaId int) int {
 
 	err = dbConn.QueryRow(sql, areaId).Scan(&i)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 
@@ -98,6 +107,7 @@ func SupportCount(areaId int) int {
 
 	dbConn, err := sql.Open("mysql", dbDsn)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 	defer dbConn.Close()
@@ -106,6 +116,7 @@ func SupportCount(areaId int) int {
 
 	err = dbConn.QueryRow(sql, areaId).Scan(&i)
 	if err != nil {
+		fmt.Println(err)
 		return i
 	}
 
