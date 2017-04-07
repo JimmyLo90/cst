@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/zhyq132/cst/business"
 	"github.com/zhyq132/cst/config"
+	"github.com/zhyq132/cst/response"
 )
 
 //ConfigPath 配置路径，全局变量
@@ -18,19 +18,6 @@ type pcPushMessage struct {
 	MsgData struct {
 		MsgAreaId int    `json:"area_id"`
 		MsgType   string `json:"type"`
-	} `json:"data"`
-}
-
-// businessResponseMessage 业务消息对应的json格式
-type businessResponseMessage struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		BusinessPur   int `json:"business.purchase"`
-		BusinessDrive int `json:"business.drive"`
-		BusinessMain  int `json:"business.maintenance"`
-		BusinessIns   int `json:"business.insurance" `
-		BusinessEme   int `json:"business.emergency"`
 	} `json:"data"`
 }
 
@@ -55,10 +42,14 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 	ws, err := upgrade.Upgrade(res, req, nil)
 	if err != nil {
 		fmt.Println("upgrade http request to ws err:", err)
+	} else {
+
 	}
 	defer func() {
-		delete(clients, ws)
-		ws.Close()
+		if _, exist := clients[ws]; exist {
+			delete(clients, ws)
+			ws.Close()
+		}
 	}()
 
 	for {
@@ -67,25 +58,19 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 		//接受ws传来的数据，不符合结构的，删除客户端,并关闭链接
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			panic(err.Error() + "*******************异常链接,已主动删除当前ws链接，禁止参与推送服务\n\n\n\n ")
+			delete(clients, ws)
+			panic(err.Error() + "*******************链接断开，停止参与推送服务\n\n\n\n ")
 		} else {
+			resBusinessMsg := response.ResponseBusiness(msg.MsgData.MsgAreaId)
+
 			if msg.MsgCmd == "sign" {
 				clients[ws] = msg
 				fmt.Println("*******************身份标识确认,已接入推送服务\n\n\n\n ")
+				ws.WriteJSON(resBusinessMsg)
 			} else if msg.MsgCmd == "push" {
-				var responseMsg businessResponseMessage
-				//查找当前area_id对应的业务信息
-				responseMsg.Status = 200
-				responseMsg.Message = "ok"
-				responseMsg.Data.BusinessDrive = business.SellPromiseCount(msg.MsgData.MsgAreaId)
-				responseMsg.Data.BusinessEme = business.SupportCount(msg.MsgData.MsgAreaId)
-				responseMsg.Data.BusinessIns = business.XubaoCount(msg.MsgData.MsgAreaId)
-				responseMsg.Data.BusinessMain = business.YangxiuCount(msg.MsgData.MsgAreaId)
-				responseMsg.Data.BusinessPur = business.SellAskCount(msg.MsgData.MsgAreaId)
-
 				for key, val := range clients {
 					if val.MsgData.MsgAreaId == msg.MsgData.MsgAreaId && val.MsgData.MsgType == msg.MsgData.MsgType {
-						key.WriteJSON(responseMsg)
+						key.WriteJSON(resBusinessMsg)
 						fmt.Println("*******************数据获取完毕确认,已推送\n\n\n\n ")
 					}
 				}
