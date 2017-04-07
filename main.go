@@ -42,8 +42,6 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 	ws, err := upgrade.Upgrade(res, req, nil)
 	if err != nil {
 		fmt.Println("upgrade http request to ws err:", err)
-	} else {
-
 	}
 	defer func() {
 		if _, exist := clients[ws]; exist {
