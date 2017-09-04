@@ -18,16 +18,14 @@ type pcPushMessage struct {
 		MsgAreaId int    `json:"area_id"`
 		MsgType   string `json:"type"`
 	} `json:"data"`
-	BusinessCount *resData `json:"business_count"`
+	BusinessCount map[string]float64 `json:"business_count"`
 }
 
 type responseMessage struct {
-	Status float64  `json:"status"`
-	Msg    string   `json:"message"`
-	Data   *resData `json:"data"`
+	Status float64            `json:"status"`
+	Msg    string             `json:"message"`
+	Data   map[string]float64 `json:"data"`
 }
-
-type resData map[string]float64
 
 //clients map类型，存储所有ws链接
 var clients = make(map[*websocket.Conn]pcPushMessage)
