@@ -6,7 +6,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/zhyq132/cst/config"
-	"github.com/zhyq132/cst/response"
 )
 
 //ConfigPath 配置路径，全局变量
@@ -19,7 +18,16 @@ type pcPushMessage struct {
 		MsgAreaId int    `json:"area_id"`
 		MsgType   string `json:"type"`
 	} `json:"data"`
+	BusinessCount *resData `json:"business_count"`
 }
+
+type responseMessage struct {
+	Status float64  `json:"status"`
+	Msg    string   `json:"message"`
+	Data   *resData `json:"data"`
+}
+
+type resData map[string]float64
 
 //clients map类型，存储所有ws链接
 var clients = make(map[*websocket.Conn]pcPushMessage)
@@ -57,18 +65,28 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			delete(clients, ws)
-			panic(err.Error() + "*******************链接断开，停止参与推送服务\n\n\n\n ")
+			panic(err.Error() + "*******************数据异常，链接断开，停止参与推送服务\n\n\n\n ")
 		} else {
-			resBusinessMsg := response.ResponseBusiness(msg.MsgData.MsgAreaId)
+			fmt.Println(msg)
 
 			if msg.MsgCmd == "sign" {
 				clients[ws] = msg
-				fmt.Println("*******************身份标识确认,已接入推送服务\n\n\n\n ")
-				ws.WriteJSON(resBusinessMsg)
+				fmt.Printf("*******************身份标识确认,已接入推送服务,总共 %v 个链接 \n\n\n\n\n", len(clients))
 			} else if msg.MsgCmd == "push" {
 				for key, val := range clients {
 					if val.MsgData.MsgAreaId == msg.MsgData.MsgAreaId && val.MsgData.MsgType == msg.MsgData.MsgType {
-						key.WriteJSON(resBusinessMsg)
+
+						res := responseMessage{
+							Status: 200,
+							Msg:    "ok",
+							Data:   msg.BusinessCount,
+						}
+
+						err := key.WriteJSON(res)
+						if err != nil {
+							fmt.Printf("%v", err.Error())
+						}
+
 						fmt.Println("*******************数据获取完毕确认,已推送\n\n\n\n ")
 					}
 				}
