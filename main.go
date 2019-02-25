@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"zhyq132/cst/config"
+
 	"github.com/gorilla/websocket"
-	"github.com/zhyq132/cst/config"
 )
 
 //ConfigPath 配置路径，全局变量
@@ -97,7 +98,7 @@ func handlerWs(res http.ResponseWriter, req *http.Request) {
 func main() {
 	http.HandleFunc("/", handlerWs)
 
-	if err := http.ListenAndServe(config.GetPcPushListendAddr(), nil); err != nil {
+	if err := http.ListenAndServeTLS(config.GetPcPushListendAddr(), config.GetListendSecureCert(), config.GetListendSecureKey(), nil); err != nil {
 		panic("error" + err.Error())
 	}
 }

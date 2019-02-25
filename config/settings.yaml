@@ -1,3 +1,5 @@
 pc_push_service:
    service_listen_ip :  127.0.0.1
    service_listen_port :  8888
+   service_listen_securt_cert :  D:\dev-env\docker-env\nginx\sites\ssl\server.crt
+   service_listen_securt_key :  D:\dev-env\docker-env\nginx\sites\ssl\server.key

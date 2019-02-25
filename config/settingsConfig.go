@@ -17,8 +17,10 @@ type Settings struct {
 
 // PcPushServiceSettingsDesc 环境设置细节
 type PcPushServiceSettingsDesc struct {
-	Address string `yaml:"service_listen_ip"`
-	Port    string `yaml:"service_listen_port"`
+	Address    string `yaml:"service_listen_ip"`
+	Port       string `yaml:"service_listen_port"`
+	SecureCert string `yaml:"service_listen_securt_cert"`
+	SecureKey  string `yaml:"service_listen_securt_key"`
 }
 
 //GetPcPushServiceSettings 获取环境设置
@@ -42,4 +44,16 @@ func GetPcPushListendAddr() string {
 	s := getSettings()
 
 	return s.PcPushServiceSettings.Address + ":" + s.PcPushServiceSettings.Port
+}
+
+//GetListendSecureCert 获取wss的cert
+func GetListendSecureCert() string {
+	s := getSettings()
+	return s.PcPushServiceSettings.SecureCert
+}
+
+//GetListendSecureKey 获取wss的key
+func GetListendSecureKey() string {
+	s := getSettings()
+	return s.PcPushServiceSettings.SecureKey
 }
