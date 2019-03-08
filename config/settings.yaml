@@ -1,5 +1,12 @@
-pc_push_service:
-   service_listen_ip :  127.0.0.1
-   service_listen_port :  8888
-   service_listen_securt_cert :  D:\dev-env\docker-env\nginx\sites\ssl\server.crt
-   service_listen_securt_key :  D:\dev-env\docker-env\nginx\sites\ssl\server.key
+wss_listen_service:
+  service_listen_ip:  127.0.0.1
+  service_listen_port:  8888
+  service_listen_securt_cert:  D:\dev-env\docker-env\nginx\sites\ssl\server.crt
+  service_listen_securt_key:  D:\dev-env\docker-env\nginx\sites\ssl\server.key
+
+wx_open_platform:
+  WX_OPEN_APPID:  wx8f16847367060d95
+  WX_OPEN_SECRET:  263b7179a5bedefa12d92cde8e633aba
+  WX_OPEN_RECEIVE_TOKEN:  CST88888888
+  WX_OPEN_ENCODING_AESKEY:  CST8888888888888888888888888888888888888888
+  WX_OPEN_APP_URL:  app.dev-chexiu.cn
