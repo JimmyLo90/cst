@@ -10,3 +10,13 @@ wx_open_platform:
   WX_OPEN_RECEIVE_TOKEN:  CST88888888
   WX_OPEN_ENCODING_AESKEY:  CST8888888888888888888888888888888888888888
   WX_OPEN_APP_URL:  app.dev-chexiu.cn
+
+cst_mysql_db:
+  ip: 192.168.2.240
+  port: 5306
+  username: root
+  password: allen123hjmHJM
+
+cst_mongo_db:
+  ip: 192.168.2.240
+  port: 11708

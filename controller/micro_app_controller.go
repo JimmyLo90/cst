@@ -16,7 +16,7 @@ import (
 type MicroAppController struct {
 }
 
-func (c *MicroAppController) ActionTest(ginContext *gin.Context) {
+func (c *MicroAppController) ActionReleaseApp(ginContext *gin.Context) {
 	o := orm.NewOrm()
 
 	//查询待发布的小程序
@@ -60,7 +60,33 @@ func (c *MicroAppController) ActionTest(ginContext *gin.Context) {
 		c.Find(q).One(&wxOpenAppModel)
 		if wxOpenAppModel.AreaId > 0 {
 			//请求接口获取app的审核状态
-			 wechat7App.AuditStatus(wxOpenAppModel,v.AuditID)
+			r := wechat7App.AuditStatus(wxOpenAppModel, v.AuditID)
+
+			modi := orm.Params{}
+			if r.ErrCode == 0 {
+				if r.Status != 2 {
+					if r.Status == 0 {
+						//执行发布操作
+						releaseRes := wechat7App.ReleaseApp(wxOpenAppModel)
+						if releaseRes.ErrCode == 0 {
+							modi["status"] = 1
+
+							//小程序设为可见
+							resVisitStatus := wechat7App.ChangeVisitStatus(wxOpenAppModel, "open")
+							if resVisitStatus.ErrCode == 0 {
+								modi["is_visible"] = 1
+								modi["visible_time"] = time.Now().Unix()
+							}
+						}
+					} else {
+						modi["status"] = 2
+					}
+					modi["remark"] = r.Reason
+
+					//@todo  接口请求成功后修改db
+					o.QueryTable((center.WxAppSubmitAudit{}).DBName()).Filter("id", v.ID).Update(modi)
+				}
+			}
 		}
 	}
 
