@@ -35,7 +35,7 @@ func (w WeixinOpenApp) GetAuthorizerAccessToken() string{
 	return w.AuthorizerAccessToken
 }
 
-//WeixinOpenPlatform 第三方的数据：AreaId为0时的那一条数据
+//WeixinOpenPlatform 第三方的数据：weixin_open表中，AreaId为0时的那一条数据
 type WeixinOpenPlatform struct {
 	Id                              bson.ObjectId `bson:"_id,omitempty"`
 	AreaId                          int32         `bson:"a_areaId"`
