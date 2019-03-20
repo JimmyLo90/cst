@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"zhyq132/cst/config"
 	"zhyq132/cst/controller"
 
 	_ "zhyq132/cst/config"
@@ -11,8 +12,11 @@ import (
 func main() {
 	r := gin.Default()
 
-	microApp:= &controller.MicroAppController{}
-	r.GET("test", microApp.ActionTest)
+	microApp := &controller.MicroAppController{}
+	r.GET("release-app", microApp.ActionReleaseApp)
 
-	r.Run(":80")
+	mpNews := &controller.MpNewsController{}
+	r.GET("get-url-by-id", mpNews.ActionGetUrlByID)
+
+	r.Run(":" + config.Config.Http.Port)
 }
