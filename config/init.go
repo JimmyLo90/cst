@@ -42,6 +42,10 @@ func (w WssConf) ListendAddr() string {
 	return w.Address + ":" + w.Port
 }
 
+type HttpConf struct {
+	Port string `yaml:"service_listen_port"`
+}
+
 // WxOpenConf 开放平台配置明细
 type WxOpenConf struct {
 	WxOpenAppID          string `yaml:"WX_OPEN_APPID"`
@@ -76,6 +80,7 @@ func (db *CstMongoDB) Dsn() string {
 //Settings 环境设置结构体
 type Settings struct {
 	Wss        WssConf    `yaml:"wss_listen_service"`
+	Http       HttpConf   `yaml:"http_listen_service"`
 	WxOpen     WxOpenConf `yaml:"wx_open_platform"`
 	CstMysqlDB CstMysqlDB `yaml:"cst_mysql_db"`
 	CstMongoDB CstMongoDB `yaml:"cst_mongo_db"`

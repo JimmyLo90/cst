@@ -4,6 +4,9 @@ wss_listen_service:
   service_listen_securt_cert:  D:\dev-env\docker-env\nginx\sites\ssl\server.crt
   service_listen_securt_key:  D:\dev-env\docker-env\nginx\sites\ssl\server.key
 
+http_listen_service:
+  service_listen_port:  9999
+
 wx_open_platform:
   WX_OPEN_APPID:  wx8f16847367060d95
   WX_OPEN_SECRET:  263b7179a5bedefa12d92cde8e633aba
