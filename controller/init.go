@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/astaxie/beego/orm"
 	"gopkg.in/mgo.v2"
 	"zhyq132/cst/config"
 )
@@ -9,11 +8,6 @@ import (
 var MongoSession *mgo.Session
 
 func init() {
-	//初始化mysql
-	orm.RegisterDriver("mysql", orm.DRMySQL)
-
-	orm.RegisterDataBase("default", "mysql", config.Config.CstMysqlDB.Dsn())
-
 	//初始化mongo
 	s, err := mgo.Dial(config.Config.CstMongoDB.Dsn())
 	if err != nil {

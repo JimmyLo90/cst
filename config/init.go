@@ -4,10 +4,11 @@ import (
 	"flag"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"zhyq132/wechat7/base"
 )
 
 //Config配置
-var Config Settings
+var Config settings
 
 func init() {
 	c := flag.String("conf", "./config/", "config files path")
@@ -30,7 +31,7 @@ readFile:
 }
 
 // WssConf 环境设置细节
-type WssConf struct {
+type wssConf struct {
 	Address    string `yaml:"service_listen_ip"`
 	Port       string `yaml:"service_listen_port"`
 	SecureCert string `yaml:"service_listen_securt_cert"`
@@ -38,50 +39,50 @@ type WssConf struct {
 }
 
 //ListendAddr 获取推送服务监听的地址
-func (w WssConf) ListendAddr() string {
+func (w wssConf) ListendAddr() string {
 	return w.Address + ":" + w.Port
 }
 
-type HttpConf struct {
+type httpConf struct {
 	Port string `yaml:"service_listen_port"`
 }
 
-// WxOpenConf 开放平台配置明细
-type WxOpenConf struct {
-	WxOpenAppID          string `yaml:"WX_OPEN_APPID"`
-	WxOpenSecret         string `yaml:"WX_OPEN_SECRET"`
-	WxOpenReceiveToken   string `yaml:"WX_OPEN_RECEIVE_TOKEN"`
-	WxOpenEncodingAeskey string `yaml:"WX_OPEN_ENCODING_AESKEY"`
-	WxOpenAppUrl         string `yaml:"WX_OPEN_APP_URL"`
-}
-
-type CstMysqlDB struct {
+type cstMysqlDB struct {
 	IP       string `yaml:"ip"`
 	Port     string `yaml:"port"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 }
 
-func (db *CstMysqlDB) Dsn() string {
-	return db.Username + ":" + db.Password + "@tcp(" + db.IP + ":" + db.Port + ")/w_center"
+func (db *cstMysqlDB) Dsn() string {
+	return db.Username + ":" + db.Password + "@tcp(" + db.IP + ":" + db.Port + ")/4s_wx_db"
 }
 
-type CstMongoDB struct {
+type cstMongoDB struct {
 	IP       string `yaml:"ip"`
 	Port     string `yaml:"port"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 }
 
-func (db *CstMongoDB) Dsn() string {
+func (db *cstMongoDB) Dsn() string {
 	return "mongodb://" + db.IP + ":" + db.Port + "/"
 }
 
-//Settings 环境设置结构体
-type Settings struct {
-	Wss        WssConf    `yaml:"wss_listen_service"`
-	Http       HttpConf   `yaml:"http_listen_service"`
-	WxOpen     WxOpenConf `yaml:"wx_open_platform"`
-	CstMysqlDB CstMysqlDB `yaml:"cst_mysql_db"`
-	CstMongoDB CstMongoDB `yaml:"cst_mongo_db"`
+type aimo struct {
+	WssHost          string `yaml:"wss_host"`
+	AppCode          string `yaml:"app_code"`
+	PicSavePath      string `yaml:"pic_save_path"`
+	PicSavePathForDB string `yaml:"pic_save_path_for_db"`
+	NextServiceHost  string `yaml:"next_service_host"`
+}
+
+//settings 环境设置结构体
+type settings struct {
+	Wss        wssConf         `yaml:"wss_listen_service"`
+	Http       httpConf        `yaml:"http_listen_service"`
+	WxOpen     base.WxOpenConf `yaml:"wx_open_platform"`
+	CstMysqlDB cstMysqlDB      `yaml:"cst_mysql_db"`
+	CstMongoDB cstMongoDB      `yaml:"cst_mongo_db"`
+	Aimo       aimo            `yaml:"aimo"`
 }

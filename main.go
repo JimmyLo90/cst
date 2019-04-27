@@ -12,11 +12,14 @@ import (
 func main() {
 	r := gin.Default()
 
-	microApp := &controller.MicroAppController{}
-	r.GET("release-app", microApp.ActionReleaseApp)
+	//microApp := &controller.MicroAppController{}
+	//r.GET("release-app", microApp.ActionReleaseApp)
+	//
+	//mpNews := &controller.MpNewsController{}
+	//r.GET("get-url-by-id", mpNews.ActionGetUrlByID)
 
-	mpNews := &controller.MpNewsController{}
-	r.GET("get-url-by-id", mpNews.ActionGetUrlByID)
+	aimo := &controller.AimoController{}
+	r.GET("aimo/wss-client", aimo.WssClient)
 
 	r.Run(":" + config.Config.Http.Port)
 }

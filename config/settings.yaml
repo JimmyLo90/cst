@@ -23,3 +23,10 @@ cst_mysql_db:
 cst_mongo_db:
   ip: 192.168.2.240
   port: 11708
+
+aimo:
+  wss_host: openapi-s-face.aimall-tech.com
+  app_code: 6A012305EC314FAB9B1099D53129206E
+  pic_save_path: D:\MyGo\src\zhyq132\cst\
+  pic_save_path_for_db: /var/www/pic/
+  next_service_host: http://4snewapi.local/smartflow/enter
