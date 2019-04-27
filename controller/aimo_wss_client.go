@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 	"zhyq132/cst/config"
 	"zhyq132/cst/service/aimo"
@@ -41,7 +42,6 @@ func (c *AimoController) WssClient(ctx *gin.Context) {
 				log.Println("read:", err)
 				return
 			}
-			log.Printf("recv: %s", message)
 
 			//验证websockets的数据
 			go func(msg []byte) {
@@ -49,9 +49,18 @@ func (c *AimoController) WssClient(ctx *gin.Context) {
 				id, err := m.Stored(msg)
 				if err != nil {
 					log.Printf("stored message err:%s,%v \n", err, id)
+				} else {
+					log.Printf("新入库aimo_pic数据，ID: %v", id)
 				}
 
-				//@todo 通知张维新数据进来了
+				//@todo 通知aimo智能客流项目组，有新的照片数据进来
+				{
+					body := url.Values{}
+					body.Add("id", strconv.FormatInt(int64(id), 10))
+					if _, err := http.PostForm(config.Config.Aimo.NextServiceHost, body); err != nil {
+						log.Printf("stored message err:%s,%v \n", err, id)
+					}
+				}
 			}(message)
 		}
 	}()

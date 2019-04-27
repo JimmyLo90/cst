@@ -111,7 +111,7 @@ func (m WssMessage) saveCaptureToJpg() (string, error) {
 
 	uri := path + fileName + extType
 	uriToDB := config.Config.Aimo.PicSavePathForDB + fileName + extType
-	
+
 	f, err := os.Create(uri)
 	if err != nil {
 		return "", err
