@@ -57,9 +57,11 @@ func (c *AimoController) WssClient(ctx *gin.Context) {
 				{
 					body := url.Values{}
 					body.Add("id", strconv.FormatInt(int64(id), 10))
-					if _, err := http.PostForm(config.Config.Aimo.NextServiceHost, body); err != nil {
+					resp, err := http.PostForm(config.Config.Aimo.NextServiceHost, body)
+					if err != nil {
 						log.Printf("stored message err:%s,%v \n", err, id)
 					}
+					defer resp.Body.Close()
 				}
 			}(message)
 		}
